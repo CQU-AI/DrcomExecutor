@@ -21,7 +21,7 @@ setup(
     license='MIT License',
     packages=find_packages("src"),
     package_dir={"": "src"},
-    include_package_data=True,
+    package_data={'': ['*.yaml']},
     platforms=["all"],
     install_requires=requirements,
     python_requires=">=3.6",
@@ -29,7 +29,7 @@ setup(
     long_description_content_type="text/markdown",
     entry_points={
         'console_scripts': [
-            'drcom_test=DrcomExecutor.__main__:main',
+            'drcomE=DrcomExecutor.__main__:main',
         ]
     }
 )
