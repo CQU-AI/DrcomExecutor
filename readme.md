@@ -5,7 +5,7 @@
 [![pypi](https://img.shields.io/pypi/v/cqu-de)](https://pypi.org/project/cqu-de/)
 ![download](https://pepy.tech/badge/cqu-de)
 
-<div align=center> <img src="./doc/logo.png"><img src="./doc/logo.png"></div>
+<div align=center> <img src="https://github.com/CQU-AI/DrcomExecutor/raw/master/doc/logo.png"><img src="https://github.com/CQU-AI/DrcomExecutor/raw/master/doc/logo.png"></div>
 
 Drcom Executor 是一个基于 Python3 的第三方重庆大学 Dr.COM 登录器。
 
@@ -36,4 +36,4 @@ Drcom Executor 是一个基于 Python3 的第三方重庆大学 Dr.COM 登录器
 
 ## 声明
 
-本程序核心代码主要基于 [drcom-generic](https://github.com/drcoms/drcom-generic) 。
+本程序核心代码主要基于 [drcom-generic](https://github.com/drcoms/drcom-generic) ,与该项目不同的是，我们主要考虑的是PC端的连接而不是路由器，故进行了一些改进与调整，。

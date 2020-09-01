@@ -47,7 +47,7 @@ def console_main():
             "-p",
             "--password",
             help="密码",
-            type=int,
+            type=str,
             default=config["user_info"]["password"],
         )
 

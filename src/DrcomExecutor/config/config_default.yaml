@@ -1,0 +1,24 @@
+user_info:
+  username: ~
+  password: ~
+
+cqu_server:
+  server: 202.202.0.163
+  host_name: LIYUANYUAN
+  host_os: 8089D
+  host_ip: 172.25.173.65
+  primary_dns: 120.78.181.91
+  dhcp_server: 202.202.0.50
+  mac: 0xB888E3051680
+
+behavior:
+  ror_version: false
+  unlimited_retry: true
+  info: true
+
+signal:
+  control_check: "\x20"
+  adapter_num: "\x01"
+  keep_alive: "\xdc\x02"
+  auth: "\x0a\x00"
+  ip_dog: "\x01"
