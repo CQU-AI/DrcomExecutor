@@ -1,7 +1,12 @@
+import time
+import traceback
+
 from DrcomExecutor.config import config
 from DrcomExecutor.core import empty_socket_buffer, keep_alive, login
 from DrcomExecutor.info import welcome
 from DrcomExecutor.utils import check_user
+
+
 
 
 def main():
@@ -11,9 +16,14 @@ def main():
     welcome(username, password)
     while True:
         try:
-            package_tail, salt = login(username, password, server)
-        except Exception:
+            tail, salt = login(username, password, server)
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
+            time.sleep(30)
             continue
         empty_socket_buffer()
-        keep_alive(salt, package_tail, password, server)
+        keep_alive(salt, tail, password, server)
 
+if __name__ == '__main__':
+    main()

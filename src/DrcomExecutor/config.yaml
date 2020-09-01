@@ -1,24 +1,21 @@
-user_info:
-  username: ~
-  password: ~
-
-cqu_server:
-  server: 202.202.0.163
-  host_name: LIYUANYUAN
-  host_os: 8089D
-  host_ip: 172.25.173.65
-  primary_dns: 120.78.181.91
-  dhcp_server: 202.202.0.50
-  mac: 0xB888E3051680
-
 behavior:
+  info: true
   ror_version: false
   unlimited_retry: true
-  info: true
-
+cqu_server:
+  dhcp_server: 202.202.0.50
+  host_ip: 172.25.173.65
+  host_name: DAMOCLES
+  host_os: 8089D
+  mac: 202898063824512
+  primary_dns: 120.78.181.91
+  server: 202.202.0.163
 signal:
-  control_check: "\x20"
   adapter_num: "\x01"
-  keep_alive: "\xdc\x02"
-  auth: "\x0a\x00"
+  auth: "\n\0"
+  control_check: ' '
   ip_dog: "\x01"
+  keep_alive: "\xDC\x02"
+user_info:
+  password: '25ToLife'
+  username: '20171873'

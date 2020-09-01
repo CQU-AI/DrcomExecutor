@@ -1,5 +1,6 @@
 import binascii
 import struct
+import sys
 from hashlib import md5
 
 from DrcomExecutor.config import config
@@ -39,8 +40,9 @@ def check_user():
 
 
 def ror(md5, pwd):
-    ret = ""
+    ret = b""
     for i in range(len(pwd)):
-        x = ord(md5[i]) ^ ord(pwd[i])
-        ret += struct.pack("B", ((x << 3) & 0xFF) + (x >> 5))
+        x = md5[i] ^ ord(pwd[i])
+        ret += bytes(((x << 3) & 0xFF) + (x >> 5))
+    # sys.exit()
     return ret

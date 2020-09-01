@@ -4,6 +4,7 @@ import socket
 import struct
 import sys
 import time
+import traceback
 
 from DrcomExecutor.config import config
 from DrcomExecutor.utils import md5sum, dump, checksum, ror
@@ -19,126 +20,104 @@ def challenge(svr, ran):
         drcom_socket.sendto(b"\x01\x02" + t + b"\x09" + b"\x00" * 15, (svr, 61440))
         try:
             data, address = drcom_socket.recvfrom(1024)
-
         except Exception as e:
-            raise e
-
-        if address == (svr, 61440):
-            break
-        else:
+            print(e)
+            print("尝试与服务器通信失败，您是否连接到了校园网？")
+            time.sleep(3)
             continue
 
-    if data[:1] != b"\x02":
-        raise Exception("challenge")
-
+        if address == (svr, 61440) and data[:1] == b"\x02":
+            break
+        else:
+            print("尝试与服务器通信时发生未知错误？")
+            time.sleep(3)
+            continue
     return data[4:8]
 
 
-def keep_alive_package_builder(number, tail, package_type=1, first=False):
-    data = b"\x07" + bytes([number]) + b"\x28\x00\x0B" + bytes([package_type])
-    if first:
-        data += b"\x0F\x27"
-    else:
-        data += config["signal"]["keep_alive"]
-    data += b"\x2F\x12" + b"\x00" * 6
-    data += tail
-    data += b"\x00" * 4
+def build_heartbeat_packet(number, tail, package_type=1, first=False) -> bytes:
+    data  = b"\x07" + bytes([number]) + b"\x28\x00\x0B" + bytes([package_type])
+    data += b"\x0F\x27" if first else config["signal"]["keep_alive"].encode("utf-8")
+    data += b"\x2F\x12" + b"\x00" * 6 + tail + b"\x00" * 4
 
     if package_type == 3:
         foo = b"".join(
             [bytes([int(i)]) for i in config["cqu_server"]["host_ip"].split(".")]
         )
-
         crc = b"\x00" * 4
-
         data += crc + foo + b"\x00" * 8
     else:
         data += b"\x00" * 16
     return data
 
 
-def keep_alive(*args):
-    ran = random.randint(0, 0xFFFF)
-    ran += random.randint(1, 10)
-
-    svr_num = 0
-    packet = keep_alive_package_builder(svr_num, b"\x00" * 4, 1, True)
+def send_heartbeat_packet(packet, check_start=False) -> bytes:
     while True:
-        # log("[keep-alive] send1", str(binascii.hexlify(packet))[2:][:-1])
         drcom_socket.sendto(packet, (config["cqu_server"]["server"], 61440))
-        data, address = drcom_socket.recvfrom(1024)
-        # log("[keep-alive] recv1", str(binascii.hexlify(data))[2:][:-1])
-        if data.startswith(b"\x07\x00\x28\x00") or data.startswith(
-            b"\x07" + bytes([svr_num]) + b"\x28\x00"
-        ):
-            break
-        elif data[:1] == b"\x07" and data[2:3] == b"\x10":
-            # log("[keep-alive] recv file, resending..")
-            svr_num = svr_num + 1
 
-            break
-        else:
-            pass
+        try:
+            data, _ = drcom_socket.recvfrom(1024)
+        except socket.timeout:
+            time.sleep(3)
+            continue
 
-    for packet in (
-        keep_alive_package_builder(svr_num, b"\x00" * 4, 1, False),
-        keep_alive_package_builder(svr_num, data[16:20], 3, False),
-    ):
-        ran += random.randint(1, 10)
-        drcom_socket.sendto(packet, (config["cqu_server"]["server"], 61440))
-        while True:
-            data, address = drcom_socket.recvfrom(1024)
-            if data[:1] == b"\x07":
-                svr_num = svr_num + 1
-                break
-            else:
-                pass
+        if check_start is True:
+            if not data.startswith(b"\x07"):
+                print("Error sending heartbeat packet")
+                time.sleep(3)
+                continue
 
-    tail = data[16:20]
+        return data[16:20]
 
-    i = svr_num
+
+def keep_alive(salt, tail, password, server):
+    _ = send_heartbeat_packet(
+        build_heartbeat_packet(0, b"\x00" * 4, 1, True),
+        check_start=True
+    )
+
+    i = 1
+    tail = b"\x00" * 4
+    for j in (1, 3):
+        tail = send_heartbeat_packet(
+            build_heartbeat_packet(i, tail, j, False),
+            check_start=True
+        )
+        i += 1
+
     while True:
         try:
             time.sleep(20)
-            keep_alive1(*args)
-            ran += random.randint(1, 10)
-            packet = keep_alive_package_builder(i, tail, 1, False)
-            drcom_socket.sendto(packet, (config["cqu_server"]["server"], 61440))
-            data, address = drcom_socket.recvfrom(1024)
-            tail = data[16:20]
-            ran += random.randint(1, 10)
-            packet = keep_alive_package_builder(i + 1, tail, 3, False)
-            drcom_socket.sendto(packet, (config["cqu_server"]["server"], 61440))
+            keep_alive1(salt, tail, password, server)
+            for _ in range(2):
+                tail = send_heartbeat_packet(
+                    build_heartbeat_packet(i, tail, 1, False),
+                    check_start=False
+                )
+                i = (i + 1) % 127
 
-            data, address = drcom_socket.recvfrom(1024)
-
-            tail = data[16:20]
-            i = (i + 2) % 127
-        except:
-            pass
+        except Exception as e:
+            print(e, file=sys.stderr)
+            traceback.print_exc()
+            time.sleep(20)
 
 
 def keep_alive1(salt, tail, pwd, server):
     foo = struct.pack("!H", int(time.time()) % 0xFFFF)
     data = b"\xff" + md5sum(b"\x03\x01" + salt + pwd.encode()) + b"\x00\x00\x00"
-    data += tail
-    data += foo + b"\x00\x00\x00\x00"
-
-    drcom_socket.sendto(data, (server, 61440))
-    while True:
-        data, address = drcom_socket.recvfrom(1024)
-        if data[:1] == b"\x07":
-            break
-        else:
-            pass
+    data += tail + foo + b"\x00\x00\x00\x00"
+    send_heartbeat_packet(
+        data,
+        check_start=True
+    )
 
 
 def make_packet(salt, usr, pwd, mac):
     data = b"\x03\x01\x00" + bytes([len(usr) + 20])
     data += md5sum(b"\x03\x01" + salt + pwd.encode())
     data += (usr.encode() + 36 * b"\x00")[:36]
-    data += config["signal"]["control_check"]
-    data += config["signal"]["adapter_num"]
+    data += config["signal"]["control_check"].encode("utf-8")
+    data += config["signal"]["adapter_num"].encode("utf-8")
     data += dump(int(binascii.hexlify(data[4:10]), 16) ^ mac)[-6:]
     data += md5sum(b"\x01" + pwd.encode() + salt + b"\x00" * 4)
     data += b"\x01"
@@ -149,7 +128,7 @@ def make_packet(salt, usr, pwd, mac):
     data += b"\00" * 4
     data += b"\00" * 4
     data += md5sum(data + b"\x14\x00\x07\x0B")[:8]
-    data += config["signal"]["ip_dog"]
+    data += config["signal"]["ip_dog"].encode("utf-8")
     data += b"\x00" * 4
     data += (config["cqu_server"]["host_name"].encode() + 32 * b"\x00")[:32]
     data += b"".join(
@@ -168,11 +147,12 @@ def make_packet(salt, usr, pwd, mac):
     data += b"\x02\x00\x00\x00"
     data += (config["cqu_server"]["host_os"].encode() + 32 * b"\x00")[:32]
     data += b"\x00" * 96
-    data += config["signal"]["auth"]
+    data += config["signal"]["auth"].encode("utf-8")
     if config["behavior"]["unlimited_retry"]:
         data += b"\x00"
         data += bytes([len(pwd)])
-        data += ror(md5sum(b"\x03\x01" + salt + pwd), pwd)
+        # print(type(salt), type(pwd))
+        data += ror(md5sum(b"\x03\x01" + salt + pwd.encode("utf-8")), pwd)
     data += b"\x02"
     data += b"\x0C"
     data += checksum(data + b"\x01\x26\x07\x11\x00\x00" + dump(mac))
@@ -185,7 +165,7 @@ def make_packet(salt, usr, pwd, mac):
 
 
 def login(usr, pwd, server):
-    i = 0
+    i = 1
     while True:
         salt = challenge(server, time.time() + random.randint(0xF, 0xFF))
         packet = make_packet(salt, usr, pwd, config["cqu_server"]["mac"])
@@ -193,17 +173,16 @@ def login(usr, pwd, server):
         drcom_socket.sendto(packet, (server, 61440))
         data, address = drcom_socket.recvfrom(1024)
 
-        if address == (server, 61440):
-            if data[:1] == b"\x04":
-                break
-            else:
-                time.sleep(3)
-
+        if address == (server, 61440) and data[:1] == b"\x04":
+            print("登录成功")
+            break
         else:
-            if i >= 5 and config["behavior"]["unlimited_retry"] == False:
+            print(f"第{i}次登录尝试失败")
+            i += 1
+            if i >= 5 and config["behavior"]["unlimited_retry"] is False:
+                print("登录失败次数过多，程序终止。")
                 sys.exit(1)
-            else:
-                continue
+            time.sleep(3)
 
     return data[23:39], salt
 
@@ -215,4 +194,4 @@ def empty_socket_buffer():
             if data == "":
                 break
     except:
-        pass
+        return
