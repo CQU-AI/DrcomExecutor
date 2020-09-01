@@ -1,7 +1,5 @@
-import time
-
 from DrcomExecutor.config import config
-from DrcomExecutor.core import empty_socket_buffer, keep_alive, login, keep_alive1
+from DrcomExecutor.core import DrcomCore
 from DrcomExecutor.info import welcome
 from DrcomExecutor.utils import check_user, reset_config
 from DrcomExecutor.version import __version__
@@ -9,20 +7,8 @@ from DrcomExecutor.version import __version__
 
 def main():
     username, password = check_user()
-    server = config["cqu_server"]["server"]
-
     welcome(username, password)
-    while True:
-        try:
-            tail, salt = login(username, password, server)
-        except Exception as e:
-            print("登录失败")
-            time.sleep(3)
-            continue
-
-        empty_socket_buffer()
-        keep_alive1(salt, tail, password, server)
-        keep_alive(salt, tail, password, server)
+    DrcomCore().__main__()
 
 
 def console_main():
@@ -33,10 +19,14 @@ def console_main():
 
         :return: Namespace with parsed arguments.
         """
-        parser = argparse.ArgumentParser(prog="de", description="第三方 重庆大学 Dr.COM 登录器", )
+        parser = argparse.ArgumentParser(prog="de", description="第三方 重庆大学 Dr.COM 登录器",)
 
         parser.add_argument(
-            "-v", "--version", action="version", version=f"DrcomExecutor {__version__}", help="显示版本号",
+            "-v",
+            "--version",
+            action="version",
+            version=f"DrcomExecutor {__version__}",
+            help="显示版本号",
         )
 
         parser.add_argument(

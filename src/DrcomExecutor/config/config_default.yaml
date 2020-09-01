@@ -1,8 +1,14 @@
+user_info:
+  password: ~
+  username: ~
+
 behavior:
   info: true
   ror_version: false
   unlimited_retry: true
   exp_backoff_limit: 500
+  print_traceback: false
+
 cqu_server:
   dhcp_server: 202.202.0.50
   host_ip: 172.25.173.65
@@ -11,12 +17,11 @@ cqu_server:
   mac: 202898063824512
   primary_dns: 120.78.181.91
   server: 202.202.0.163
+
 signal:
   adapter_num: "\x01"
   auth: "\n\0"
   control_check: ' '
   ip_dog: "\x01"
   keep_alive: "\xDC\x02"
-user_info:
-  password: ~
-  username: ~
+

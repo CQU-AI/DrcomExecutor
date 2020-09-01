@@ -28,9 +28,7 @@ class Config:
 
     @classmethod
     def reset(cls):
-        cls.path.write_text(
-            cls.default_path.read_text()
-        )
+        cls.path.write_text(cls.default_path.read_text())
 
 
 config = Config()
