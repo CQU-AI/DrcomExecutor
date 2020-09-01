@@ -14,11 +14,11 @@ with (source_root / "requirements.txt").open(encoding="utf8") as f:
 setup(
     name='DrcomExecutor',
     version='0.1.0',
-    description="",
-    author='',
-    author_email='',
-    url="",
-    license='MIT License',
+    description="基于 Python3 的第三方重庆大学Dr.COM登录器",
+    author='CQU-AI',
+    author_email='https://github.com/CQU-AI',
+    url="https://github.com/CQU-AI/DrcomExecutor",
+    license='GPL License',
     packages=find_packages("src"),
     package_dir={"": "src"},
     package_data={'': ['*.yaml']},
@@ -29,7 +29,7 @@ setup(
     long_description_content_type="text/markdown",
     entry_points={
         'console_scripts': [
-            'drcomE=DrcomExecutor.__main__:main',
+            'de=DrcomExecutor.__main__:main',
         ]
     }
 )
