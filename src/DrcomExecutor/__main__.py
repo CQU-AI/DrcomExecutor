@@ -17,5 +17,3 @@ def main():
         empty_socket_buffer()
         keep_alive(salt, package_tail, password, server)
 
-
-main()
