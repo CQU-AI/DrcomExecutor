@@ -5,7 +5,7 @@ from urllib import parse
 import requests
 from bs4 import BeautifulSoup
 
-from src.DrcomExecutor.config import config
+from DrcomExecutor.config import config
 
 
 def welcome(sid: str, passwd: str):

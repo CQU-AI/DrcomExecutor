@@ -2,7 +2,7 @@ import binascii
 import struct
 from hashlib import md5
 
-from DrcomExecutor.config import config
+from DrcomExecutor.config import config, Config
 
 
 def md5sum(s):
@@ -44,3 +44,8 @@ def ror(md5, pwd):
         x = ord(md5[i]) ^ ord(pwd[i])
         ret += struct.pack("B", ((x << 3) & 0xFF) + (x >> 5))
     return ret
+
+
+def reset_config():
+    Config.reset()
+    print("已重置配置文件")
