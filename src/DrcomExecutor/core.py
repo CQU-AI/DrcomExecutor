@@ -36,7 +36,7 @@ def challenge(svr, ran):
 
 
 def build_heartbeat_packet(number, tail, package_type=1, first=False) -> bytes:
-    data  = b"\x07" + bytes([number]) + b"\x28\x00\x0B" + bytes([package_type])
+    data = b"\x07" + bytes([number]) + b"\x28\x00\x0B" + bytes([package_type])
     data += b"\x0F\x27" if first else config["signal"]["keep_alive"].encode("utf-8")
     data += b"\x2F\x12" + b"\x00" * 6 + tail + b"\x00" * 4
 
@@ -58,6 +58,7 @@ def send_heartbeat_packet(packet, check_start=False) -> bytes:
         try:
             data, _ = drcom_socket.recvfrom(1024)
         except socket.timeout:
+            print("Socket Timeout")
             time.sleep(3)
             continue
 
@@ -70,7 +71,7 @@ def send_heartbeat_packet(packet, check_start=False) -> bytes:
         return data[16:20]
 
 
-def keep_alive(salt, tail, password, server):
+def keep_alive(salt, ptail, password, server):
     _ = send_heartbeat_packet(
         build_heartbeat_packet(0, b"\x00" * 4, 1, True),
         check_start=True
@@ -88,10 +89,10 @@ def keep_alive(salt, tail, password, server):
     while True:
         try:
             time.sleep(20)
-            keep_alive1(salt, tail, password, server)
-            for _ in range(2):
+            keep_alive1(salt, ptail, password, server)
+            for j in (1, 3):
                 tail = send_heartbeat_packet(
-                    build_heartbeat_packet(i, tail, 1, False),
+                    build_heartbeat_packet(i, tail, j, False),
                     check_start=False
                 )
                 i = (i + 1) % 127

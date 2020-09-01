@@ -2,7 +2,7 @@ import time
 import traceback
 
 from DrcomExecutor.config import config
-from DrcomExecutor.core import empty_socket_buffer, keep_alive, login
+from DrcomExecutor.core import empty_socket_buffer, keep_alive, login, keep_alive1
 from DrcomExecutor.info import welcome
 from DrcomExecutor.utils import check_user
 
@@ -23,6 +23,7 @@ def main():
             time.sleep(30)
             continue
         empty_socket_buffer()
+        keep_alive1(salt, tail, password, server)
         keep_alive(salt, tail, password, server)
 
 if __name__ == '__main__':
