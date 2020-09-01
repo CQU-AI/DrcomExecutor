@@ -2,6 +2,7 @@ behavior:
   info: true
   ror_version: false
   unlimited_retry: true
+  exp_backoff_limit: 500
 cqu_server:
   dhcp_server: 202.202.0.50
   host_ip: 172.25.173.65
@@ -17,5 +18,5 @@ signal:
   ip_dog: "\x01"
   keep_alive: "\xDC\x02"
 user_info:
-  password: '25ToLife'
-  username: '20171873'
+  password: ~
+  username: ~

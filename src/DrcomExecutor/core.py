@@ -1,10 +1,10 @@
 import binascii
+import datetime
 import random
 import socket
 import struct
 import sys
 import time
-import traceback
 
 from DrcomExecutor.config import config
 from DrcomExecutor.utils import md5sum, dump, checksum, ror
@@ -97,10 +97,12 @@ def keep_alive(salt, ptail, password, server):
                 )
                 i = (i + 1) % 127
 
+            _ = socket.gethostbyname('www.taobao.com')
+
         except Exception as e:
-            print(e, file=sys.stderr)
-            traceback.print_exc()
-            time.sleep(20)
+            print(datetime.datetime.now(), "网络断开，尝试重新登陆")
+            time.sleep(3)
+            return
 
 
 def keep_alive1(salt, tail, pwd, server):
@@ -172,6 +174,7 @@ def login(usr, pwd, server):
         packet = make_packet(salt, usr, pwd, config["cqu_server"]["mac"])
 
         drcom_socket.sendto(packet, (server, 61440))
+        # try
         data, address = drcom_socket.recvfrom(1024)
 
         if address == (server, 61440) and data[:1] == b"\x04":

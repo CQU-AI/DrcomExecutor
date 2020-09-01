@@ -1,5 +1,4 @@
 import time
-import traceback
 
 from DrcomExecutor.config import config
 from DrcomExecutor.core import empty_socket_buffer, keep_alive, login, keep_alive1
@@ -17,10 +16,10 @@ def main():
         try:
             tail, salt = login(username, password, server)
         except Exception as e:
-            print(e)
-            traceback.print_exc()
-            time.sleep(30)
+            print("登录失败")
+            time.sleep(3)
             continue
+
         empty_socket_buffer()
         keep_alive1(salt, tail, password, server)
         keep_alive(salt, tail, password, server)
