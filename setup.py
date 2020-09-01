@@ -2,7 +2,7 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
-version = "0.1.0"
+version = "0.1.1"
 
 # Read the contents of README file
 source_root = Path(".")
@@ -14,7 +14,7 @@ with (source_root / "requirements.txt").open(encoding="utf8") as f:
     requirements = f.readlines()
 
 with (source_root / "src" / "DrcomExecutor" / "version.py").open(
-    "w", encoding="utf-8"
+        "w", encoding="utf-8"
 ) as f:
     f.writelines(
         [
@@ -25,11 +25,11 @@ with (source_root / "src" / "DrcomExecutor" / "version.py").open(
     )
 
 setup(
-    name="DrcomExecutor",
+    name="cqu-de",
     version=version,
     description="基于 Python3 的第三方重庆大学Dr.COM登录器",
     author="CQU-AI",
-    author_email="https://github.com/CQU-AI",
+    author_email="peter@mail.loopy.tech",
     url="https://github.com/CQU-AI/DrcomExecutor",
     license="GPL License",
     packages=find_packages("src"),
@@ -40,5 +40,5 @@ setup(
     python_requires=">=3.6",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    entry_points={"console_scripts": ["de=DrcomExecutor:console_main",]},
+    entry_points={"console_scripts": ["de=DrcomExecutor:console_main", ]},
 )
