@@ -211,11 +211,15 @@ class DrcomCore:
                 break
             else:
                 log(f"登录失败", error=True)
+
                 i += 1
-                if i >= 6 and config["behavior"]["unlimited_retry"] is False:
-                    print("登录失败次数过多，程序终止")
-                    exit()
-                time.sleep(3)
+                if i >= 6:
+                    if config["behavior"]["unlimited_retry"] is False:
+                        print("登录失败次数过多，无法登录的帐号密码已被清除")
+                        config.reset()
+                        exit()
+                    else:
+                        log(f"是否帐号密码出错？请退出后使用`de -r`清除以前的密码", warning=True)
 
         return data[23:39], salt
 
