@@ -1,4 +1,6 @@
-from DrcomExecutor.config import config
+import sys
+
+from DrcomExecutor.config import config, Config
 from DrcomExecutor.core import DrcomCore
 from DrcomExecutor.info import welcome
 from DrcomExecutor.utils import check_user, reset_config
@@ -19,7 +21,7 @@ def console_main():
 
         :return: Namespace with parsed arguments.
         """
-        parser = argparse.ArgumentParser(prog="de", description="第三方 重庆大学 Dr.COM 登录器",)
+        parser = argparse.ArgumentParser(prog="de", description="第三方 重庆大学 Dr.COM 登录器", )
 
         parser.add_argument(
             "-v",
@@ -28,7 +30,12 @@ def console_main():
             version=f"DrcomExecutor {__version__}",
             help="显示版本号",
         )
-
+        parser.add_argument(
+            "-c",
+            "--config_path",
+            help="查询配置文件路径",
+            action="store_true",
+        )
         parser.add_argument(
             "-r", "--reset", help="重置配置项", action="store_true",
         )
@@ -52,6 +59,9 @@ def console_main():
     args = parse_args()
     if args.reset:
         reset_config()
+    if args.config_path:
+        print(f"配置文件位于{Config.path}\n")
+        sys.exit()
 
     config.dump()
 

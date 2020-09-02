@@ -138,7 +138,7 @@ class DrcomCore:
             self.socket.sendto(packet, (config["cqu_server"]["server"], 61440))
 
             if heartbeat_error_count > 10:
-                if config['behavior']['unlimited_retry']:
+                if config["behavior"]["unlimited_retry"]:
                     raise ConnectionResetError("重新登录")
                 else:
                     exit()
