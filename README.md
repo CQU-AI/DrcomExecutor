@@ -4,6 +4,7 @@
 ![Liscence](https://img.shields.io/github/license/CQU-AI/DrcomExecutor)
 [![pypi](https://img.shields.io/pypi/v/cqu-de)](https://pypi.org/project/cqu-de/)
 ![download](https://pepy.tech/badge/cqu-de)
+![Upload Python Package](https://github.com/CQU-AI/DrcomExecutor/workflows/Upload%20Python%20Package/badge.svg)
 
 <div align=center> <img src="https://github.com/CQU-AI/DrcomExecutor/raw/master/doc/logo.png"><img src="https://github.com/CQU-AI/DrcomExecutor/raw/master/doc/logo.png"></div>
 
