@@ -2,6 +2,7 @@ import binascii
 import random
 import socket
 import struct
+import sys
 import time
 
 from DrcomExecutor.config import config
@@ -105,9 +106,14 @@ class DrcomCore:
                 log("登录失败 " + str(e), error=True)
                 continue
 
-            self.empty_socket_buffer()
-            self.keep_alive1(salt, tail, password)
-            self.keep_alive(salt, tail, password, server)
+            # 体面的退出
+            try:
+                self.empty_socket_buffer()
+                self.keep_alive1(salt, tail, password)
+                self.keep_alive(salt, tail, password, server)
+            except KeyboardInterrupt:
+                log("de已完全退出，再见！")
+                sys.exit()
 
     def challenge(self, svr, ran):
         while True:
@@ -127,20 +133,30 @@ class DrcomCore:
         return data[4:8]
 
     def send_heartbeat_packet(self, packet, check_start=False) -> bytes:
+        heartbeat_error_count = 0
         while True:
             self.socket.sendto(packet, (config["cqu_server"]["server"], 61440))
 
+            if heartbeat_error_count > 10:
+                if config['behavior']['unlimited_retry']:
+                    raise ConnectionResetError("重新登录")
+                else:
+                    exit()
             try:
                 data, _ = self.socket.recvfrom(1024)
             except socket.timeout:
-                print("Socket Timeout")
+                log("心跳包发送失败，是否在其他地方登录？", warning=True)
                 time.sleep(3)
+                heartbeat_error_count += 1
+
                 continue
 
             if check_start is True:
                 if not data.startswith(b"\x07"):
-                    print("Error sending heartbeat packet")
+                    log("心跳包发送失败", warning=True)
                     time.sleep(3)
+                    heartbeat_error_count += 1
+
                     continue
 
             return data[16:20]

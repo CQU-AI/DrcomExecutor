@@ -2,7 +2,7 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
-version = "0.2.0"
+version = "0.2.2"
 
 # Read the contents of README file
 source_root = Path(".")
@@ -34,7 +34,7 @@ setup(
     license="GPL License",
     packages=find_packages("src"),
     package_dir={"": "src"},
-    package_data={"": ["*.yaml"]},
+    package_data={"": ["config_default.yaml"]},
     platforms=["all"],
     install_requires=requirements,
     python_requires=">=3.6",

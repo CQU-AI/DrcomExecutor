@@ -54,3 +54,5 @@ def console_main():
         reset_config()
 
     config.dump()
+
+    main()
