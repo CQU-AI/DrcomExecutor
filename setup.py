@@ -2,11 +2,11 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
-version = "0.2.2"
+version = "0.3.0"
 
 # Read the contents of README file
 source_root = Path(".")
-with (source_root / "readme.md").open(encoding="utf-8") as f:
+with (source_root / "README.md").open(encoding="utf-8") as f:
     long_description = f.read()
 
 # Read the requirements
