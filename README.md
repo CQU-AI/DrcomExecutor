@@ -1,5 +1,6 @@
 # Drcom Executor
 
+[![cqu-tool-bucket](https://img.shields.io/badge/CQU-%E9%87%8D%E5%BA%86%E5%A4%A7%E5%AD%A6%E5%85%A8%E5%AE%B6%E6%A1%B6%E8%AE%A1%E5%88%92-blue)](https://github.com/topics/cqu-tool-bucket)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c3b9072a56d745ac868aabd676aa524c)](https://www.codacy.com/gh/CQU-AI/DrcomExecutor?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CQU-AI/DrcomExecutor&amp;utm_campaign=Badge_Grade)
 ![Liscence](https://img.shields.io/github/license/CQU-AI/DrcomExecutor)
 [![pypi](https://img.shields.io/pypi/v/cqu-de)](https://pypi.org/project/cqu-de/)
@@ -36,5 +37,6 @@ Drcom Executor 是一个基于 Python3 的第三方重庆大学 Dr.COM 登录器
 - [ ] 更丰富的配置选项
 
 ## 声明
-
-本程序核心代码主要基于 [drcom-generic](https://github.com/drcoms/drcom-generic) ,与该项目不同的是，我们主要考虑的是PC端的连接而不是路由器，故进行了一些改进与调整，。
+1. 本程序核心代码主要基于 [drcom-generic](https://github.com/drcoms/drcom-generic) ,与该项目不同的是，我们主要考虑的是PC端的连接而不是路由器，故进行了一些改进与调整。
+1. 本程序开放源代码，可自行检查是否窃取你的信息。
+1. 本程序不存储用户的帐号，密码。
