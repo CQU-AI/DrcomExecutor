@@ -13,7 +13,7 @@ from DrcomExecutor.utils import (
     ror,
     log,
     reset_error_count,
-    exit,
+    exit, check_update,
 )
 
 
@@ -105,7 +105,7 @@ class DrcomCore:
             except Exception as e:
                 log("登录失败 " + str(e), error=True)
                 continue
-
+            check_update('cqu-de')
             # 体面的退出
             try:
                 self.empty_socket_buffer()
