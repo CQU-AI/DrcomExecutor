@@ -22,7 +22,9 @@ def welcome(sid: str, passwd: str):
      | |  | | '__/ __/ _ \| '_ ` _ \|  __| \ \/ / _ \/ __| | | | __/ _ \| '__|
      | |__| | | | (_| (_) | | | | | | |____ >  <  __/ (__| |_| | || (_) | |
      |_____/|_|  \___\___/|_| |_| |_|______/_/\_\___|\___|\__,_|\__\___/|_|                          
-    """.format(__version__)
+    """.format(
+            __version__
+        )
     )
 
     if config["behavior"]["info"]:
@@ -45,7 +47,12 @@ def welcome(sid: str, passwd: str):
 
         if config["behavior"]["short_info"]:
             msg = "{}的{}，欢迎你使用DE！你当前使用的是{}套餐，目前网上冲浪了{}，并使用了{}流量，账户里还有{}。\n".format(
-                info['客户单位'], info["姓名"], info["套餐组"], info["使用时长"], info["使用流量"], info["账户实际余额"],
+                info["客户单位"],
+                info["姓名"],
+                info["套餐组"],
+                info["使用时长"],
+                info["使用流量"],
+                info["账户实际余额"],
             )
             print("\n        ".join(split_msg(msg, 40)))
         else:
