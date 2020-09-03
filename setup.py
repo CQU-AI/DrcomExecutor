@@ -2,7 +2,7 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
-version = "0.3.2"
+version = "0.3.3"
 
 # Read the contents of README file
 source_root = Path(".")
@@ -40,5 +40,5 @@ setup(
     python_requires=">=3.6",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    entry_points={"console_scripts": ["de=DrcomExecutor:console_main", ]},
+    entry_points={"console_scripts": ["cqu-de=DrcomExecutor:console_main", ]},
 )

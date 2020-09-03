@@ -21,7 +21,7 @@ def console_main():
 
         :return: Namespace with parsed arguments.
         """
-        parser = argparse.ArgumentParser(prog="de", description="第三方 重庆大学 Dr.COM 登录器", )
+        parser = argparse.ArgumentParser(prog="cqu-de", description="第三方 重庆大学 Dr.COM 登录器", )
 
         parser.add_argument(
             "-v",
