@@ -2,7 +2,7 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
-version = "0.3.3"
+version = "0.3.4"
 
 # Read the contents of README file
 source_root = Path(".")
