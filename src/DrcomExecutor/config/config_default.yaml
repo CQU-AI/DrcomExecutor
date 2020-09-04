@@ -4,7 +4,7 @@ user_info:
 
 behavior:
   info: true
-  short_info: true
+  short_info: false
   ror_version: false
   unlimited_retry: true
   exp_backoff_limit: 500

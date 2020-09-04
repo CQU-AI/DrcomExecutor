@@ -54,7 +54,7 @@ def welcome(sid: str, passwd: str):
                 info["使用流量"],
                 info["账户实际余额"],
             )
-            print("\n        ".join(split_msg(msg, 40)))
+            print("\n   ".join(split_msg(msg, 40)))
         else:
             print(
                 "\n".join(
