@@ -24,7 +24,7 @@ class Config:
         return self.data.__getitem__(item)
 
     def dump(self):
-        self.path.write_text(yaml.dump(self.data, Dumper=yaml.SafeDumper))
+        Config.path.write_text(yaml.dump(self.data, Dumper=yaml.SafeDumper))
 
     @classmethod
     def reset(cls):
