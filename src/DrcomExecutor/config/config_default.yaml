@@ -25,4 +25,3 @@ signal:
   control_check: ' '
   ip_dog: "\x01"
   keep_alive: "\xDC\x02"
-
