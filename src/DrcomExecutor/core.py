@@ -1,6 +1,7 @@
 import binascii
 import random
 import socket
+from socket import error
 import struct
 import sys
 import time
@@ -198,7 +199,7 @@ class DrcomCore:
         self.send_heartbeat_packet(data, check_start=True)
 
     def login(self, usr, pwd, server):
-        i = 1
+        error_counter = 0 if not config["behavior"]["unlimited_retry"] else -0x3fffffff # min(int32)
         while True:
             salt = self.challenge(server, time.time() + random.randint(0xF, 0xFF))
             packet = make_packet(salt, usr, pwd, config["cqu_server"]["mac"])
@@ -210,16 +211,22 @@ class DrcomCore:
                 log("登录成功")
                 break
             else:
-                log(f"登录失败", error=True)
+                if data.startswith(b"\x05\x00\x00\x05\x03"):
+                    log("帐号密码错误，无效的帐号密码已清除", error=True)
+                    config.reset()
+                    exit()
+                elif data.startswith(b"\x05\x00\x00\x05\x04"):
+                    log("帐号已欠费，请充值后再次登录", error=True)
+                    exit()
+                elif data.startswith(b"\x05\x00\x00\x05\x05"):
+                    log("帐号已停机，请前往管理页面开机", error=True)
+                    exit()
+                else:
+                    log("登录失败，原因未知", error=True)
 
-                i += 1
-                if i >= 6:
-                    if config["behavior"]["unlimited_retry"] is False:
-                        print("登录失败次数过多，无法登录的帐号密码已被清除")
-                        config.reset()
-                        exit()
-                    else:
-                        log(f"是否帐号密码出错？请退出后使用`de -r`清除以前的密码", warning=True)
+                error_counter += 1
+                if error_counter >= 5:
+                    exit()
 
         return data[23:39], salt
 
