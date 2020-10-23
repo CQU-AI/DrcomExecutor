@@ -199,7 +199,6 @@ class DrcomCore:
         self.send_heartbeat_packet(data, check_start=True)
 
     def login(self, usr, pwd, server):
-        error_counter = 0 if not config["behavior"]["unlimited_retry"] else -0x3fffffff # min(int32)
         while True:
             salt = self.challenge(server, time.time() + random.randint(0xF, 0xFF))
             packet = make_packet(salt, usr, pwd, config["cqu_server"]["mac"])
@@ -223,10 +222,6 @@ class DrcomCore:
                     exit()
                 else:
                     log("登录失败，原因未知", error=True)
-
-                error_counter += 1
-                if error_counter >= 5:
-                    exit()
 
         return data[23:39], salt
 
