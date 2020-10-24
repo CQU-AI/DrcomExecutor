@@ -34,6 +34,9 @@ def console_main():
             "-c", "--config_path", help="查询配置文件路径", action="store_true",
         )
         parser.add_argument(
+            "-l", "--log_path", help="查询日志文件路径", action="store_true",
+        )
+        parser.add_argument(
             "-r", "--reset", help="重置配置项", action="store_true",
         )
         parser.add_argument(
@@ -59,7 +62,12 @@ def console_main():
     if args.config_path:
         print(f"配置文件位于{Config.path}\n")
         sys.exit()
+    if args.log_path:
+        print(f"日志文件位于{Config.log_path}\n")
+        sys.exit()
 
     config.dump()
 
+    main()
+if __name__ == '__main__':
     main()

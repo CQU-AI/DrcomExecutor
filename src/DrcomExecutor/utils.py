@@ -72,16 +72,21 @@ def reset_config():
 
 def log(msg, error=False, warning=False):
     global ERROR_COUNT
+
+    def log_print(text):
+        config.log_path.write_text(text+"\n")
+        print(text)
+
     if error:
-        print("[{}]  {} - {}".format(datetime.now(), msg, ERROR_COUNT))
+        log_print("[{}]  {} - {}".format(datetime.now(), msg, ERROR_COUNT))
         if config["behavior"]["print_traceback"]:
-            traceback.print_exc()
+            log_print(traceback.format_exc())
         time.sleep(min(2 ** ERROR_COUNT, config["behavior"]["exp_backoff_limit"]))
         ERROR_COUNT += 1
     elif warning:
-        print("[{}]  {}".format(datetime.now(), msg))
+        log_print("[{}]  {}".format(datetime.now(), msg))
     else:
-        print("[{}]  {}".format(datetime.now(), msg))
+        log_print("[{}]  {}".format(datetime.now(), msg))
         reset_error_count()
 
 

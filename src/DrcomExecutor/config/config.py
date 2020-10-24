@@ -6,6 +6,7 @@ import yaml
 class Config:
     path = Path(__file__).parent / "config.yaml"
     default_path = Path(__file__).parent / "config_default.yaml"
+    log_path = Path(__file__).parent / "DE.log"
 
     def __init__(self):
         if not self.path.is_file():
@@ -14,6 +15,7 @@ class Config:
             else:
                 Config.reset()
         self.data = self.read_yaml(self.path)
+        self.log_path.open('a')
 
     @staticmethod
     def read_yaml(file_path):
